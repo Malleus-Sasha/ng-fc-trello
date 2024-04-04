@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
+import { PageNotFoundComponent } from './pages/page-not-found-component/page-not-found.component';
 
 export const routes: Routes = [
-    { path: '', loadChildren: () => import('./modules/auth/auth.routes').then(mod => mod.AUTH_ROUTES) },
-    
+    { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+    { path: 'auth', loadChildren: () => import('./modules/auth/auth.routes').then(mod => mod.AUTH_ROUTES) },
+    { path: '**', component: PageNotFoundComponent }
 ];
