@@ -51,7 +51,7 @@ export class LoginComponent {
     this.router.navigateByUrl('trello');
     this.authService.isAuth$.next(true);
     this.authService.activeUser = user;
-  }  
+  }
   
   getErrorMessage(fieldName: 'email' | 'password') {
     const field = this.form.controls[fieldName];
