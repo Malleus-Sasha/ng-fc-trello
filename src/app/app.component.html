@@ -1,10 +1,12 @@
 <header class="header">
+  <div class="auth-action" *ngIf="!(authService.isAuth$ | async)">[NotAuth]</div>
   <a href="/">Home</a> |
   <a href="auth">Auth</a> |
   <a href="trello">Trello</a> |
   | 
   <button mat-raised-button color="primary" routerLink="auth/login">Login</button>
   <button mat-raised-button color="primary" routerLink="auth/register">Registretion</button>
+  <button *ngIf="authService.isAuth$ | async" mat-raised-button color="primary" (click)="logout()">Logout</button>
 </header>
 <div class="content">
   <h1>CONTENT</h1>

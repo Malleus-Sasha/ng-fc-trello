@@ -3,6 +3,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButton } from '@angular/material/button';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { AuthService } from '../../../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { UserRegister } from '../../../../types/register.type';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +18,39 @@ import { MatInput } from '@angular/material/input';
 export class LoginComponent {
   form!: FormGroup;
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private matSnackBar: MatSnackBar,
+    private router: Router,
+  ) {
     this.initForm();
   }
 
   submit() {
-    // console.log(this.form.controls);
-    console.log(this.form.value);
-    console.log('ers',this.form.errors);
-    console.log(this.form.controls['email'].errors);
+    const users = this.authService.getUsers();
+    const user: UserRegister | undefined = users.find((userData: UserRegister) => userData.email === this.form.value.email)
+
+    if (!user) {
+      this.matSnackBar.open('User not found', 'CL', { duration: 3000 })
+      return;
+    }
+
+    if (this.form.value.password !== user?.password) {
+      this.matSnackBar.open('Check your password', 'CL', { duration: 3000 });
+      return;
+    }
+
+    users.map((userRegisterData: UserRegister) => {
+      if (userRegisterData.login === user?.login) {
+        userRegisterData.isAuth = true;
+      }
+    })
+    window.localStorage.setItem('users', JSON.stringify(users));
+
+    this.matSnackBar.open('Success', 'CL', { duration: 3000 });
+    this.router.navigateByUrl('trello');
+    this.authService.isAuth$.next(true);
+    this.authService.activeUser = user;
   }  
   
   getErrorMessage(fieldName: 'email' | 'password') {
@@ -36,10 +64,8 @@ export class LoginComponent {
 
   private initForm() {
     this.form = new FormGroup({
-      email: new FormControl('e', [Validators.required, Validators.minLength(4)]),
+      email: new FormControl('1@1.c', [Validators.required, Validators.minLength(4)]),
       password: new FormControl(null, [Validators.required, Validators.minLength(4)]),
     });
   }
-
-
 }
