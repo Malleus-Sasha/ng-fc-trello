@@ -6,12 +6,13 @@ import { Task } from '../../../../types/task.type';
 import { JsonPipe, NgFor, NgIf } from '@angular/common';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { TrelloListComponent } from '../trello-list/trello-list.component';
-import { MatOption } from '@angular/material/core';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'app-trello',
   standalone: true,
-  imports: [TrelloListComponent, ReactiveFormsModule, NgIf, NgFor, JsonPipe, MatFormField, MatLabel, MatOption],
+  imports: [TrelloListComponent, ReactiveFormsModule, NgIf, NgFor, JsonPipe, MatFormField, MatLabel, MatSelect, MatOption, MatInput],
   templateUrl: './trello.component.html',
   styleUrl: './trello.component.scss'
 })
@@ -46,7 +47,7 @@ export class TrelloComponent {
     this.tasks.push(task);
     this.form.reset();
     window.localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    // this.trelloListComponent.reload$.next(null);
+    this.trelloListComponent.reload$.next(null);
   }
 
   private initForm(): void {
