@@ -27,4 +27,8 @@ export class AuthService {
 
     this.isAuth$.next(!!activeUser);
   }
+
+  public isAdmin(): boolean {
+    return this.activeUser?.login === 'Admin';
+  }
 }
